@@ -57,21 +57,7 @@ $container->set(
     }
 );
 
-$eventManager = new EventsManager();
-
-$eventManager->attach(
-    'notifications',
-    new App\Listeners\notificationListeners()
-);
-
-$container->set(
-    'eventManager',
-    $eventManager
-);
-
 $application = new Application($container);
-
-
 
 $container->set(
     'db',
@@ -86,6 +72,25 @@ $container->set(
         );
     }
 );
+
+$application = new Application($container);
+$eventManager = new EventsManager();
+
+$eventManager->attach(
+    'notifications',
+    new App\Listeners\notificationListeners()
+);
+$eventManager->attach(
+    'application:beforeHandleRequest',
+    new App\Listeners\notificationListeners()
+);
+
+$container->set(
+    'eventManager',
+    $eventManager
+);
+
+$application->seteventsManager($eventManager);
 
 // $container->set(
 //     'mongo',

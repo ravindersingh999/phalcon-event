@@ -41,4 +41,22 @@ class notificationListeners
         }
         return $data;
     }
+    
+    public function beforeHandleRequest(Event $event, \Phalcon\Mvc\Application $application)
+    {
+        $aclFile = APP_PATH . '/security/acl.cache';
+        if (true == is_file($aclFile)) {
+            $acl = unserialize(
+                file_get_contents($aclFile)
+            );
+
+            $role = $application->request->get("role");
+            if (!$role || true !== $acl->isAllowed($role, 'test', 'eventtest')) {
+                echo "Access denied :(";
+                die();
+            } else {
+                // echo "we don't find any acl list try after somtiome";
+            }
+        }
+    }
 }
